@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Use the geocoder without a map</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js"></script>
+<style>
+body { margin: 0; padding: 0; }
+#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+
+<style>
+    #geocoder {
+        z-index: 1;
+        margin: 20px;
+    }
+    .mapboxgl-ctrl-geocoder {
+        min-width: 100%;
+    }
+    #result {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+</style>
+
+<div id="geocoder"></div>
+<pre id="result">
+    <div class="my-result">
+        <h2>Longitude : <span id="kinh-do"></span> </h2>
+        <h2>Lattitude : <span id="vi-do"></span> </h2>
+    </div>
+</pre>
+
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1IjoiZG9ob2FuZ3NvbjA2MDgwMSIsImEiOiJjbDk2bmRtbjUwN2IwM3dwYXhmMDJraGpvIn0.iIHMSM4PrKuBE6u4DwxSjA';
+    const geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        types: 'country,region,place,postcode,locality,neighborhood'
+    });
+
+    geocoder.addTo('#geocoder');
+
+    // Get the geocoder results container.
+    const results = document.getElementById('result');
+
+    // Add geocoder result to container.
+    geocoder.on('result', (e) => {
+        // results.innerText = JSON.stringify(e.result, null, 2);
+        // console.log("TYPE OF" ,typeof(JSON.stringify(e.result, null, 2)) ) ; \
+        let myResult = JSON.parse(JSON.stringify(e.result, null, 2)) ; 
+        // console.log("my Result" , myResult) ; 
+        // console.log("coordinate" ,myResult.geometry.coordinates ) ;
+        document.getElementById("kinh-do").innerHTML = myResult.geometry.coordinates[0] ; 
+        document.getElementById("vi-do").innerHTML = myResult.geometry.coordinates[1] ; 
+    });
+
+    // Clear results container when search is cleared.
+    geocoder.on('clear', () => {
+        results.innerText = '';
+    });
+</script>
+
+</body>
+</html>
